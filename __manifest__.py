@@ -6,7 +6,7 @@
     'author': 'Moussa Diakite',
     'website': 'https://www.example.com',
     'license': 'LGPL-3',
-    'depends': ['base', 'stock'],
+    'depends': ['base', 'sale_management', 'purchase', 'stock'],
     'data': [
         'security/ir.model.access.csv',
         'views/restaurant_view.xml',
