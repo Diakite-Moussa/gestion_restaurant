@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- Template du rapport -->
+        <template id="report_commande_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2>Commande : <t t-esc="doc.name"/></h2>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td><strong>Table</strong></td>
+                                    <td><t t-esc="doc.table_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Date</strong></td>
+                                    <td><t t-esc="doc.date_commande"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>État</strong></td>
+                                    <td>
+                                        <t t-if="doc.etat == 'en_attente'">En attente</t>
+                                        <t t-elif="doc.etat == 'en_preparation'">En préparation</t>
+                                        <t t-elif="doc.etat == 'servie'">Servie</t>
+                                        <t t-elif="doc.etat == 'payee'">Payée</t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Montant total</strong></td>
+                                    <td><t t-esc="doc.montant_total"/> MAD</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Action du rapport -->
+        <record id="action_report_commande" model="ir.actions.report">
+            <field name="name">Commande Restaurant</field>
+            <field name="model">gestion.commande</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">gestion_restaurant.report_commande_template</field>
+            <field name="report_file">gestion_restaurant.report_commande_template</field>
+            <field name="binding_model_id" ref="model_gestion_commande"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>
