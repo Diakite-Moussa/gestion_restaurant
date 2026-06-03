@@ -9,8 +9,12 @@
     'depends': ['base', 'sale_management', 'purchase', 'stock'],
     'data': [
         'security/ir.model.access.csv',
+        'data/sequence.xml',
         'views/restaurant_view.xml',
         'reports/commande_report.xml',
+    ],
+    'demo': [
+        'demo/demo.xml',
     ],
     'installable': True,
     'application': True,

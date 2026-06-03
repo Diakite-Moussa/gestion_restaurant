@@ -1,30 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
-<!--
-          <record id="object0" model="gestion_restaurant.gestion_restaurant">
-            <field name="name">Object 0</field>
-            <field name="value">0</field>
-          </record>
+    <data noupdate="1">
 
-          <record id="object1" model="gestion_restaurant.gestion_restaurant">
-            <field name="name">Object 1</field>
-            <field name="value">10</field>
-          </record>
+        <!-- ===== TABLES ===== -->
+        <record id="demo_table_1" model="gestion.table">
+            <field name="name">Table 1</field>
+            <field name="capacite">2</field>
+            <field name="etat">libre</field>
+        </record>
 
-          <record id="object2" model="gestion_restaurant.gestion_restaurant">
-            <field name="name">Object 2</field>
-            <field name="value">20</field>
-          </record>
+        <record id="demo_table_2" model="gestion.table">
+            <field name="name">Table 2</field>
+            <field name="capacite">4</field>
+            <field name="etat">occupee</field>
+        </record>
 
-          <record id="object3" model="gestion_restaurant.gestion_restaurant">
-            <field name="name">Object 3</field>
-            <field name="value">30</field>
-          </record>
+        <record id="demo_table_3" model="gestion.table">
+            <field name="name">Table 3</field>
+            <field name="capacite">6</field>
+            <field name="etat">reservee</field>
+        </record>
 
-          <record id="object4" model="gestion_restaurant.gestion_restaurant">
-            <field name="name">Object 4</field>
-            <field name="value">40</field>
-          </record>
--->
+        <record id="demo_table_4" model="gestion.table">
+            <field name="name">Table 4</field>
+            <field name="capacite">4</field>
+            <field name="etat">libre</field>
+        </record>
+
+        <record id="demo_table_5" model="gestion.table">
+            <field name="name">Table 5</field>
+            <field name="capacite">8</field>
+            <field name="etat">libre</field>
+        </record>
+
+        <!-- ===== PLATS ===== -->
+        <record id="demo_plat_1" model="gestion.plat">
+            <field name="name">Harira</field>
+            <field name="prix">25.0</field>
+            <field name="categorie">entree</field>
+            <field name="description">Soupe marocaine traditionnelle aux tomates et légumes</field>
+            <field name="disponible">True</field>
+        </record>
+
+        <record id="demo_plat_2" model="gestion.plat">
+            <field name="name">Salade marocaine</field>
+            <field name="prix">35.0</field>
+            <field name="categorie">entree</field>
+            <field name="description">Salade de tomates, concombres et olives</field>
+            <field name="disponible">True</field>
+        </record>
+
+        <record id="demo_plat_3" model="gestion.plat">
+            <field name="name">Tajine de poulet</field>
+            <field name="prix">85.0</field>
+            <field name="categorie">plat_principal</field>
+            <field name="description">Tajine de poulet aux citrons confits et olives</field>
+            <field name="disponible">True</field>
+        </record>
+
+        <record id="demo_plat_4" model="gestion.plat">
+            <field name="name">Couscous royal</field>
+            <field name="prix">95.0</field>
+            <field name="categorie">plat_principal</field>
+            <field name="description">Couscous avec viande d'agneau et légumes</field>
+            <field name="disponible">True</field>
+        </record>
+
+        <record id="demo_plat_5" model="gestion.plat">
+            <field name="name">Pastilla au poulet</field>
+            <field name="prix">75.0</field>
+            <field name="categorie">plat_principal</field>
+            <field name="description">Feuilleté marocain au poulet et amandes</field>
+            <field name="disponible">True</field>
+        </record>
+
+        <record id="demo_plat_6" model="gestion.plat">
+            <field name="name">Cornes de gazelle</field>
+            <field name="prix">30.0</field>
+            <field name="categorie">dessert</field>
+            <field name="description">Pâtisserie marocaine aux amandes et eau de fleur d'oranger</field>
+            <field name="disponible">True</field>
+        </record>
+
+        <record id="demo_plat_7" model="gestion.plat">
+            <field name="name">Thé à la menthe</field>
+            <field name="prix">15.0</field>
+            <field name="categorie">boisson</field>
+            <field name="description">Thé vert à la menthe fraîche</field>
+            <field name="disponible">True</field>
+        </record>
+
+        <record id="demo_plat_8" model="gestion.plat">
+            <field name="name">Jus d'orange frais</field>
+            <field name="prix">20.0</field>
+            <field name="categorie">boisson</field>
+            <field name="description">Jus d'orange pressé à la minute</field>
+            <field name="disponible">True</field>
+        </record>
+
+        <!-- ===== COMMANDES ===== -->
+        <record id="demo_commande_1" model="gestion.commande">
+            <field name="name">CMD-DEMO-001</field>
+            <field name="table_id" ref="demo_table_2"/>
+            <field name="etat">en_preparation</field>
+        </record>
+
+        <record id="demo_ligne_1_1" model="gestion.ligne.commande">
+            <field name="commande_id" ref="demo_commande_1"/>
+            <field name="plat_id" ref="demo_plat_1"/>
+            <field name="quantite">2</field>
+        </record>
+
+        <record id="demo_ligne_1_2" model="gestion.ligne.commande">
+            <field name="commande_id" ref="demo_commande_1"/>
+            <field name="plat_id" ref="demo_plat_3"/>
+            <field name="quantite">2</field>
+        </record>
+
+        <record id="demo_ligne_1_3" model="gestion.ligne.commande">
+            <field name="commande_id" ref="demo_commande_1"/>
+            <field name="plat_id" ref="demo_plat_7"/>
+            <field name="quantite">2</field>
+        </record>
+
+        <record id="demo_commande_2" model="gestion.commande">
+            <field name="name">CMD-DEMO-002</field>
+            <field name="table_id" ref="demo_table_3"/>
+            <field name="etat">servie</field>
+        </record>
+
+        <record id="demo_ligne_2_1" model="gestion.ligne.commande">
+            <field name="commande_id" ref="demo_commande_2"/>
+            <field name="plat_id" ref="demo_plat_2"/>
+            <field name="quantite">1</field>
+        </record>
+
+        <record id="demo_ligne_2_2" model="gestion.ligne.commande">
+            <field name="commande_id" ref="demo_commande_2"/>
+            <field name="plat_id" ref="demo_plat_4"/>
+            <field name="quantite">3</field>
+        </record>
+
+        <record id="demo_ligne_2_3" model="gestion.ligne.commande">
+            <field name="commande_id" ref="demo_commande_2"/>
+            <field name="plat_id" ref="demo_plat_6"/>
+            <field name="quantite">3</field>
+        </record>
+
+        <record id="demo_ligne_2_4" model="gestion.ligne.commande">
+            <field name="commande_id" ref="demo_commande_2"/>
+            <field name="plat_id" ref="demo_plat_8"/>
+            <field name="quantite">3</field>
+        </record>
+
+        <record id="demo_commande_3" model="gestion.commande">
+            <field name="name">CMD-DEMO-003</field>
+            <field name="table_id" ref="demo_table_1"/>
+            <field name="etat">en_attente</field>
+        </record>
+
+        <record id="demo_ligne_3_1" model="gestion.ligne.commande">
+            <field name="commande_id" ref="demo_commande_3"/>
+            <field name="plat_id" ref="demo_plat_5"/>
+            <field name="quantite">1</field>
+        </record>
+
+        <record id="demo_ligne_3_2" model="gestion.ligne.commande">
+            <field name="commande_id" ref="demo_commande_3"/>
+            <field name="plat_id" ref="demo_plat_7"/>
+            <field name="quantite">1</field>
+        </record>
+
     </data>
 </odoo>

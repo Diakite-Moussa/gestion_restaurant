@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-        <!-- Template du rapport -->
+        <!-- Template du rapport avec lignes de commande -->
         <template id="report_commande_template">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="doc">
@@ -27,10 +27,36 @@
                                         <t t-elif="doc.etat == 'payee'">Payée</t>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td><strong>Montant total</strong></td>
-                                    <td><t t-esc="doc.montant_total"/> MAD</td>
-                                </tr>
+                            </table>
+
+                            <h3 style="margin-top: 20px;">Lignes de commande</h3>
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Plat</th>
+                                        <th>Catégorie</th>
+                                        <th>Quantité</th>
+                                        <th>Prix unitaire</th>
+                                        <th>Sous-total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.ligne_ids" t-as="ligne">
+                                        <tr>
+                                            <td><t t-esc="ligne.plat_id.name"/></td>
+                                            <td><t t-esc="ligne.plat_id.categorie"/></td>
+                                            <td><t t-esc="ligne.quantite"/></td>
+                                            <td><t t-esc="ligne.prix_unitaire"/> MAD</td>
+                                            <td><t t-esc="ligne.sous_total"/> MAD</td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4" style="text-align: right;"><strong>Total</strong></td>
+                                        <td><strong><t t-esc="doc.montant_total"/> MAD</strong></td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </t>

@@ -4,13 +4,20 @@ class RestaurantTable(models.Model):
     _name = 'gestion.table'
     _description = 'Table du restaurant'
 
-    name = fields.Char(string='Numéro de table', required=True)
+    name = fields.Char(string='Numéro de table', required=True, copy=False, readonly=True, default='/')
     capacite = fields.Integer(string='Capacité', required=True)
     etat = fields.Selection([
         ('libre', 'Libre'),
         ('occupee', 'Occupée'),
         ('reservee', 'Réservée'),
     ], string='État', default='libre')
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', '/') == '/':
+                vals['name'] = self.env['ir.sequence'].next_by_code('gestion.table') or '/'
+        return super().create(vals_list)
 
 class Plat(models.Model):
     _name = 'gestion.plat'
@@ -46,8 +53,9 @@ class LigneCommande(models.Model):
 class RestaurantCommande(models.Model):
     _name = 'gestion.commande'
     _description = 'Commande du restaurant'
+    _rec_name = 'name'
 
-    name = fields.Char(string='Numéro de commande', required=True)
+    name = fields.Char(string='Numéro de commande', required=True, copy=False, readonly=True, default='/')
     table_id = fields.Many2one('gestion.table', string='Table', required=True)
     date_commande = fields.Datetime(string='Date de commande', default=fields.Datetime.now)
     etat = fields.Selection([
@@ -63,6 +71,13 @@ class RestaurantCommande(models.Model):
     def _compute_montant_total(self):
         for commande in self:
             commande.montant_total = sum(commande.ligne_ids.mapped('sous_total'))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', '/') == '/':
+                vals['name'] = self.env['ir.sequence'].next_by_code('gestion.commande') or '/'
+        return super().create(vals_list)
 
     def action_en_preparation(self):
         self.etat = 'en_preparation'

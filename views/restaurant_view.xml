@@ -120,7 +120,7 @@
                     </header>
                     <sheet>
                         <group>
-                            <field name="name"/>
+                            <field name="name" readonly="1"/>
                             <field name="table_id"/>
                             <field name="date_commande"/>
                         </group>
@@ -158,6 +158,29 @@
             </field>
         </record>
 
+        <!-- Vue Kanban Commandes -->
+        <record id="commande_kanban_view" model="ir.ui.view">
+            <field name="name">gestion.commande.kanban</field>
+            <field name="model">gestion.commande</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="etat">
+                    <field name="name"/>
+                    <field name="table_id"/>
+                    <field name="etat"/>
+                    <field name="montant_total"/>
+                    <templates>
+                        <t t-name="card">
+                            <div class="oe_kanban_card">
+                                <strong><field name="name"/></strong>
+                                <p>Table : <field name="table_id"/></p>
+                                <p>Total : <field name="montant_total"/> MAD</p>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="commande_graph_view" model="ir.ui.view">
             <field name="name">gestion.commande.graph</field>
             <field name="model">gestion.commande</field>
@@ -183,7 +206,7 @@
         <record id="commande_action" model="ir.actions.act_window">
             <field name="name">Commandes</field>
             <field name="res_model">gestion.commande</field>
-            <field name="view_mode">list,form,graph,pivot</field>
+            <field name="view_mode">list,form,kanban,graph,pivot</field>
         </record>
 
         <!-- ==================== MENUS ==================== -->
