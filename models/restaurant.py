@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class RestaurantTable(models.Model):
     _name = 'gestion.table'
@@ -16,6 +17,12 @@ class RestaurantTable(models.Model):
         ('occupee', 'Occupée'),
         ('reservee', 'Réservée'),
     ], string='État', default='libre')
+
+    @api.constrains('capacite')
+    def _check_capacite(self):
+        for table in self:
+            if table.capacite <= 0:
+                raise ValidationError("La capacité de la table doit être supérieure à 0.")
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -42,6 +49,12 @@ class Plat(models.Model):
     disponible = fields.Boolean(string='Disponible', default=True)
     product_id = fields.Many2one('product.product', string='Produit lié (Inventaire)')
 
+    @api.constrains('prix')
+    def _check_prix(self):
+        for plat in self:
+            if plat.prix <= 0:
+                raise ValidationError("Le prix du plat doit être supérieur à 0.")
+
 
 class Reservation(models.Model):
     _name = 'gestion.reservation'
@@ -58,6 +71,17 @@ class Reservation(models.Model):
         ('confirmee', 'Confirmée'),
         ('annulee', 'Annulée'),
     ], string='État', default='en_attente')
+
+    @api.constrains('nombre_personnes', 'table_id')
+    def _check_nombre_personnes(self):
+        for res in self:
+            if res.nombre_personnes <= 0:
+                raise ValidationError("Le nombre de personnes doit être supérieur à 0.")
+            if res.table_id and res.nombre_personnes > res.table_id.capacite:
+                raise ValidationError(
+                    f"Le nombre de personnes ({res.nombre_personnes}) dépasse "
+                    f"la capacité de la table ({res.table_id.capacite})."
+                )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -84,6 +108,12 @@ class LigneCommande(models.Model):
     quantite = fields.Integer(string='Quantité', default=1)
     prix_unitaire = fields.Float(string='Prix unitaire', related='plat_id.prix', store=True)
     sous_total = fields.Float(string='Sous-total', compute='_compute_sous_total', store=True)
+
+    @api.constrains('quantite')
+    def _check_quantite(self):
+        for line in self:
+            if line.quantite <= 0:
+                raise ValidationError("La quantité doit être supérieure à 0.")
 
     @api.depends('quantite', 'prix_unitaire')
     def _compute_sous_total(self):
