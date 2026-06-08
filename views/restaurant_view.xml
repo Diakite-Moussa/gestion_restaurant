@@ -3,7 +3,6 @@
     <data>
 
         <!-- ==================== TABLES ==================== -->
-
         <record id="table_form_view" model="ir.ui.view">
             <field name="name">gestion.table.form</field>
             <field name="model">gestion.table</field>
@@ -11,7 +10,7 @@
                 <form string="Table">
                     <sheet>
                         <group>
-                            <field name="name"/>
+                            <field name="name" readonly="1"/>
                             <field name="capacite"/>
                             <field name="etat"/>
                         </group>
@@ -60,7 +59,6 @@
         </record>
 
         <!-- ==================== PLATS ==================== -->
-
         <record id="plat_form_view" model="ir.ui.view">
             <field name="name">gestion.plat.form</field>
             <field name="model">gestion.plat</field>
@@ -95,14 +93,111 @@
             </field>
         </record>
 
+        <record id="plat_kanban_view" model="ir.ui.view">
+            <field name="name">gestion.plat.kanban</field>
+            <field name="model">gestion.plat</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="categorie"/>
+                    <field name="prix"/>
+                    <field name="disponible"/>
+                    <templates>
+                        <t t-name="card">
+                            <div class="oe_kanban_card">
+                                <strong><field name="name"/></strong>
+                                <p>Catégorie : <field name="categorie"/></p>
+                                <p>Prix : <field name="prix"/> MAD</p>
+                                <p>Disponible : <field name="disponible"/></p>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="plat_action" model="ir.actions.act_window">
             <field name="name">Plats</field>
             <field name="res_model">gestion.plat</field>
-            <field name="view_mode">list,form</field>
+            <field name="view_mode">list,form,kanban</field>
+        </record>
+
+        <!-- ==================== RESERVATIONS ==================== -->
+        <record id="reservation_form_view" model="ir.ui.view">
+            <field name="name">gestion.reservation.form</field>
+            <field name="model">gestion.reservation</field>
+            <field name="arch" type="xml">
+                <form string="Réservation">
+                    <header>
+                        <button name="action_confirmer" string="Confirmer" type="object"
+                            invisible="etat not in ('en_attente', 'annulee')" class="btn-primary"/>
+                        <button name="action_annuler" string="Annuler" type="object"
+                            invisible="etat != 'confirmee'" class="btn-danger"/>
+                        <field name="etat" widget="statusbar"
+                            statusbar_visible="en_attente,confirmee,annulee"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" readonly="1"/>
+                                <field name="client_name"/>
+                                <field name="table_id"/>
+                            </group>
+                            <group>
+                                <field name="date_reservation"/>
+                                <field name="nombre_personnes"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="reservation_tree_view" model="ir.ui.view">
+            <field name="name">gestion.reservation.list</field>
+            <field name="model">gestion.reservation</field>
+            <field name="arch" type="xml">
+                <list string="Réservations">
+                    <field name="name"/>
+                    <field name="client_name"/>
+                    <field name="table_id"/>
+                    <field name="date_reservation"/>
+                    <field name="nombre_personnes"/>
+                    <field name="etat"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="reservation_kanban_view" model="ir.ui.view">
+            <field name="name">gestion.reservation.kanban</field>
+            <field name="model">gestion.reservation</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="etat">
+                    <field name="name"/>
+                    <field name="client_name"/>
+                    <field name="table_id"/>
+                    <field name="etat"/>
+                    <templates>
+                        <t t-name="card">
+                            <div class="oe_kanban_card">
+                                <strong><field name="name"/></strong>
+                                <p>Client : <field name="client_name"/></p>
+                                <p>Table : <field name="table_id"/></p>
+                                <p>Date : <field name="date_reservation"/></p>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="reservation_action" model="ir.actions.act_window">
+            <field name="name">Réservations</field>
+            <field name="res_model">gestion.reservation</field>
+            <field name="view_mode">list,form,kanban</field>
         </record>
 
         <!-- ==================== COMMANDES ==================== -->
-
         <record id="commande_form_view" model="ir.ui.view">
             <field name="name">gestion.commande.form</field>
             <field name="model">gestion.commande</field>
@@ -120,9 +215,15 @@
                     </header>
                     <sheet>
                         <group>
-                            <field name="name" readonly="1"/>
-                            <field name="table_id"/>
-                            <field name="date_commande"/>
+                            <group>
+                                <field name="name" readonly="1"/>
+                                <field name="table_id"/>
+                                <field name="serveur_id"/>
+                            </group>
+                            <group>
+                                <field name="date_commande"/>
+                                <field name="montant_total" readonly="1"/>
+                            </group>
                         </group>
                         <notebook>
                             <page string="Lignes de commande">
@@ -136,9 +237,6 @@
                                 </field>
                             </page>
                         </notebook>
-                        <group class="oe_subtotal_footer">
-                            <field name="montant_total" readonly="1"/>
-                        </group>
                     </sheet>
                 </form>
             </field>
@@ -151,6 +249,7 @@
                 <list string="Commandes">
                     <field name="name"/>
                     <field name="table_id"/>
+                    <field name="serveur_id"/>
                     <field name="date_commande"/>
                     <field name="etat"/>
                     <field name="montant_total"/>
@@ -158,7 +257,6 @@
             </field>
         </record>
 
-        <!-- Vue Kanban Commandes -->
         <record id="commande_kanban_view" model="ir.ui.view">
             <field name="name">gestion.commande.kanban</field>
             <field name="model">gestion.commande</field>
@@ -210,11 +308,12 @@
         </record>
 
         <!-- ==================== MENUS ==================== -->
-
         <menuitem id="menu_gestion_restaurant" name="Gestion Restaurant" sequence="10"/>
         <menuitem id="menu_tables" name="Tables" parent="menu_gestion_restaurant" action="table_action" sequence="10"/>
-        <menuitem id="menu_plats" name="Plats" parent="menu_gestion_restaurant" action="plat_action" sequence="20"/>
+        <menuitem id="menu_reservations" name="Réservations" parent="menu_gestion_restaurant" action="reservation_action" sequence="20"/>
         <menuitem id="menu_commandes" name="Commandes" parent="menu_gestion_restaurant" action="commande_action" sequence="30"/>
+        <menuitem id="menu_configuration" name="Configuration" parent="menu_gestion_restaurant" sequence="100"/>
+        <menuitem id="menu_plats" name="Plats" parent="menu_configuration" action="plat_action" sequence="10"/>
 
     </data>
 </odoo>

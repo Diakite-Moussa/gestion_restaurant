@@ -1,5 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_gestion_table,access_gestion_table,model_gestion_table,,1,1,1,1
-access_gestion_commande,access_gestion_commande,model_gestion_commande,,1,1,1,1
 access_gestion_plat,access_gestion_plat,model_gestion_plat,,1,1,1,1
+access_gestion_commande,access_gestion_commande,model_gestion_commande,,1,1,1,1
 access_gestion_ligne_commande,access_gestion_ligne_commande,model_gestion_ligne_commande,,1,1,1,1
+access_gestion_reservation,access_gestion_reservation,model_gestion_reservation,,1,1,1,1

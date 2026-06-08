@@ -2,25 +2,14 @@
 <odoo>
     <data noupdate="1">
 
-        <!-- Catégorie -->
-        <record id="module_category_gestion_restaurant" model="ir.module.category">
-            <field name="name">Gestion Restaurant</field>
-            <field name="sequence">20</field>
-        </record>
-
-    </data>
-    <data>
-
         <!-- Groupe Utilisateur -->
         <record id="group_restaurant_user" model="res.groups">
-            <field name="name">Utilisateur</field>
-            <field name="category_id" ref="gestion_restaurant.module_category_gestion_restaurant"/>
+            <field name="name">Utilisateur Restaurant</field>
         </record>
 
         <!-- Groupe Manager -->
         <record id="group_restaurant_manager" model="res.groups">
-            <field name="name">Manager</field>
-            <field name="category_id" ref="gestion_restaurant.module_category_gestion_restaurant"/>
+            <field name="name">Manager Restaurant</field>
             <field name="implied_ids" eval="[(4, ref('gestion_restaurant.group_restaurant_user'))]"/>
         </record>
 

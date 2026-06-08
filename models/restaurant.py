@@ -3,6 +3,11 @@ from odoo import models, fields, api
 class RestaurantTable(models.Model):
     _name = 'gestion.table'
     _description = 'Table du restaurant'
+    _order = 'name'
+
+    _sql_constraints = [
+        ('name_unique', 'UNIQUE(name)', 'Ce numéro de table existe déjà.')
+    ]
 
     name = fields.Char(string='Numéro de table', required=True, copy=False, readonly=True, default='/')
     capacite = fields.Integer(string='Capacité', required=True)
@@ -19,9 +24,11 @@ class RestaurantTable(models.Model):
                 vals['name'] = self.env['ir.sequence'].next_by_code('gestion.table') or '/'
         return super().create(vals_list)
 
+
 class Plat(models.Model):
     _name = 'gestion.plat'
     _description = 'Plat du restaurant'
+    _order = 'categorie, name'
 
     name = fields.Char(string='Nom du plat', required=True)
     prix = fields.Float(string='Prix', required=True)
@@ -34,6 +41,39 @@ class Plat(models.Model):
     description = fields.Text(string='Description')
     disponible = fields.Boolean(string='Disponible', default=True)
     product_id = fields.Many2one('product.product', string='Produit lié (Inventaire)')
+
+
+class Reservation(models.Model):
+    _name = 'gestion.reservation'
+    _description = 'Réservation de table'
+    _order = 'date_reservation desc'
+
+    name = fields.Char(string='Référence', required=True, copy=False, readonly=True, default='/')
+    client_name = fields.Char(string='Nom du client', required=True)
+    table_id = fields.Many2one('gestion.table', string='Table', required=True)
+    date_reservation = fields.Datetime(string='Date de réservation', required=True)
+    nombre_personnes = fields.Integer(string='Nombre de personnes')
+    etat = fields.Selection([
+        ('en_attente', 'En attente'),
+        ('confirmee', 'Confirmée'),
+        ('annulee', 'Annulée'),
+    ], string='État', default='en_attente')
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', '/') == '/':
+                vals['name'] = self.env['ir.sequence'].next_by_code('gestion.reservation') or '/'
+        return super().create(vals_list)
+
+    def action_confirmer(self):
+        self.etat = 'confirmee'
+        self.table_id.etat = 'reservee'
+
+    def action_annuler(self):
+        self.etat = 'annulee'
+        self.table_id.etat = 'libre'
+
 
 class LigneCommande(models.Model):
     _name = 'gestion.ligne.commande'
@@ -50,13 +90,15 @@ class LigneCommande(models.Model):
         for line in self:
             line.sous_total = line.quantite * line.prix_unitaire
 
+
 class RestaurantCommande(models.Model):
     _name = 'gestion.commande'
     _description = 'Commande du restaurant'
-    _rec_name = 'name'
+    _order = 'date_commande desc'
 
     name = fields.Char(string='Numéro de commande', required=True, copy=False, readonly=True, default='/')
     table_id = fields.Many2one('gestion.table', string='Table', required=True)
+    serveur_id = fields.Many2one('res.users', string='Serveur')
     date_commande = fields.Datetime(string='Date de commande', default=fields.Datetime.now)
     etat = fields.Selection([
         ('en_attente', 'En attente'),
@@ -81,9 +123,11 @@ class RestaurantCommande(models.Model):
 
     def action_en_preparation(self):
         self.etat = 'en_preparation'
+        self.table_id.etat = 'occupee'
 
     def action_servie(self):
         self.etat = 'servie'
 
     def action_payee(self):
         self.etat = 'payee'
+        self.table_id.etat = 'libre'
