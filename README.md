@@ -1,6 +1,6 @@
-# Gestion Restaurant — Module Odoo 17
+# Gestion Restaurant — Module Odoo 19
 
-Module personnalisé Odoo 17 pour la gestion d'un restaurant.
+Module personnalisé Odoo 19 pour la gestion d'un restaurant.
 
 ## Auteur
 
@@ -21,6 +21,7 @@ https://github.com/Diakite-Moussa/gestion_restaurant
 - Vues Graph et Pivot sur les commandes
 - Rapport PDF QWeb avec détail des lignes
 - Contraintes de validation métier (capacité, nombre de personnes, quantité)
+- Groupes de sécurité : Manager Restaurant / Utilisateur Restaurant
 
 ## Modèles
 
